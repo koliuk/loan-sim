@@ -1,0 +1,34 @@
+<h2>Simulations</h2>
+
+<% if @simulations.blank? %>
+<h3>There are not any simulations currently in the system.</h3>
+<% else %>
+<table id = "simulations" class="table"> 
+  <thead class="thead-light">
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Amount</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @simulations.each_with_index do |simulation,idx| %>
+    <tr>
+      <td><%= idx+1 %>)</td>
+      <td><%= link_to simulation.name, {:action => 'show', :id => simulation.id } %></td>
+      <td><%= simulation.loan.currencyAmount.format %></td>
+      <td>
+      	<%= link_to '[Edit]', {:action => 'edit', :id => simulation.id } %>
+        <%= link_to '[Delete]', {:action => 'delete', :id => simulation.id }, data: {:confirm => "Are you sure you want to delete this simulation?" } %>  	
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% end %>
+
+<div id="buttons">
+	<%= link_to 'New Simulation', {:action => 'new'}, :class=>"btn btn-primary" %>
+</div>

@@ -1,0 +1,12 @@
+<h2>Edit simulation '<%= @simulation.name %>'</h2>
+
+<%= form_for @simulation, :url =>{:action => "update", :id =>@simulation} do |sim_form| %>
+
+<%= render partial: "form", locals: { sim_form: sim_form } %>
+
+<div id="buttons">
+	<%= submit_tag("Save", :id=>"button", :class=>"btn btn-primary", :name=>"submit") %>
+	<%= link_to 'Cancel', {:action => 'show', :id => @simulation.id }, :class=>"btn btn-secondary"  %>
+</div>
+
+<% end %>

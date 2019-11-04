@@ -1,0 +1,30 @@
+<h4>General</h4>
+
+<div class="form-group">
+	<label for = "simulation_name">Name</label>
+	<%= sim_form.text_field(:name, :class=>"form-control #{'is-invalid' if sim_form.object.errors[:name].present?}") %>
+	<small id="name_help" class="form-text text-muted">Not empty. Maximum 256 characters.</small>
+	<%= errors_for sim_form, :name %>
+</div>
+
+<h4>Loan</h4>
+
+<%= fields_for :loan, @loan do |loan_form|%>
+	<div class="form-group">
+	  <div class="form-row">
+	    <div class="col">
+	      <label for = "loan_amount">Amount</label>
+	      <%= loan_form.text_field(:amount, :class=>"form-control #{'is-invalid' if loan_form.object.errors[:amount].present?}") %>
+	      <small id="amount_help" class="form-text text-muted">Minimum 1 000.00. Maximum 999 999 999.99.</small>
+	      <%= errors_for loan_form, :amount %>
+	    </div>
+	    
+	    <div class="col">
+	      <label for = "loan_currency">Currency</label>
+	      <%= loan_form.collection_select(:currency, @currencies, :to_s, :to_s, {}, {:class=>"form-control #{'is-invalid' if loan_form.object.errors[:currency].present?}"}) %>
+	      <small id="currency_help" class="form-text text-muted"></small>
+	      <%= errors_for loan_form, :currency %>
+	    </div>
+	  </div>
+	</div>
+<% end %>

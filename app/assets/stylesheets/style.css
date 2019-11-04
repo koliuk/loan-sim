@@ -1,0 +1,104 @@
+body {
+   font-family: Helvetica, Geneva, Arial, sans-serif;
+   font-size: normal;
+   font-color: #000;
+   background-color: #fff;
+}
+
+a:link, a:active, a:visited {
+   /*color: #CD0000;*/
+}
+
+input { 
+   margin-bottom: 5px;
+}
+
+p { 
+   line-height: 100%;
+}
+
+div#container {
+   width: 760px;
+   margin: 0 auto;
+}
+
+div#header {
+   text-align: center;
+}
+
+div#content {
+   float: left;
+   width: 450px;
+   padding: 10px;
+}
+
+div#content h3 {
+   margin-top: 15px;
+}
+
+div#buttons {
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
+
+ul#books {
+   list-style-type: none;
+}
+
+ul#books li {
+   line-height: 140%;
+}
+
+div#sidebar {
+   width: 200px;
+   margin-left: 480px;
+}
+
+ul#subjects {
+   width: 700px;
+   text-align: center;
+   padding: 5px;
+   background-color: #ececec;
+   border: 1px solid #ccc;
+   margin-bottom: 20px;
+}
+
+ul#subjects li {
+   display: inline;
+   padding-left: 5px;
+}
+
+.primary-btn {
+   font-weight: bold;
+   /*color: #CD0000 !important; */
+}
+
+.button {
+    display: inline-block;
+    border: none;
+    padding: 2px 20px 2px 20px;
+    margin: 0;
+    text-decoration: none;
+    background: #EEEEEE;
+    color: #333333;
+    font-family: Helvetica, Geneva, Arial, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+ }
+
+.button:hover,
+.button:focus {
+    background: #f8f8f8;
+}
+
+.button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+
+.button:active {
+    transform: scale(0.96);
+}

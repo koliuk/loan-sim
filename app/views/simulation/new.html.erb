@@ -1,0 +1,25 @@
+<h2>New simulation</h2>
+
+<%= form_for @simulation, :url =>{:action => "create"} do |sim_form| %>
+
+
+
+<%# <%= submit_tag "Create" :class=>"button" %>
+
+<%= render partial: "form", locals: { sim_form: sim_form } %>
+
+<div id="buttons" >
+	<%= submit_tag("Create", :id=>"button", :class=>"btn btn-primary", :name=>"submit") %>
+	<%= link_to 'Cancel', {:action => 'list'}, :class=>"btn btn-secondary" %>
+</div>
+
+<%#<% if @loan.errors.full_messages.any? %>
+<%#  <% @loan.errors.full_messages.each do |error_message| %>
+<%#    <%= error_message if @loan.errors.full_messages.first == error_message %> <br />
+<%#  <% end %>
+<%#<% end %>
+
+<% end -%>
+
+
+

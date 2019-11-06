@@ -20,4 +20,12 @@
 
 	  </div>
 	</div>
+
+	<div class="form-group">
+		<label for = "loan_period">Period (in months)</label>
+		<%= loan_form.number_field(:period, :in=>12...601, :step=>1, :class=>"form-control #{'is-invalid' if loan_form.object.errors[:period].present?}") %>
+		<small id="period_help" class="form-text text-muted">Not empty. Range from 12 to 600.</small>
+		<%= errors_for loan_form, :period %>
+	</div>
+
 <% end %>

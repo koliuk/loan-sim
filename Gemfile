@@ -30,10 +30,12 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 # bootstrap
 gem 'bootstrap', '~> 4.3.1'
-
 # jquery
 gem 'jquery-rails'
+# popper
+gem 'popper_js' 
 
+# money
 gem 'money'
 
 group :development, :test do

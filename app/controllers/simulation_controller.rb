@@ -54,7 +54,7 @@ class SimulationController < ApplicationController
 	end
 
 	def loan_params
-		params.require(:loan).permit(:amount, :currency)
+		params.require(:loan).permit(:amount, :currency, :period)
 	end
 
 	def update

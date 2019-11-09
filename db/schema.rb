@@ -10,10 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_231500) do
+ActiveRecord::Schema.define(version: 2019_11_07_214100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "interest_periods", force: :cascade do |t|
+    t.integer "loan_id", null: false
+    t.decimal "interest", precision: 8, scale: 2, null: false
+  end
 
   create_table "loans", force: :cascade do |t|
     t.integer "simulation_id", null: false

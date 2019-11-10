@@ -1,89 +1,96 @@
 class SimulationController < ApplicationController
 
-	def self.currencies
-		['PLN']
-	end
+    def self.currencies
+        ['PLN']
+    end
 
-	layout 'application'
+    layout 'application'
 
-	def list
-		@simulations = Simulation.all
-	end
+    def list
+        @simulations = Simulation.all
+    end
 
-	def show
-		@simulation = Simulation.find(params[:id])
-	end
+    def show
+        @simulation = Simulation.find(params[:id])
+    end
 
-	def new
-		@simulation = Simulation.new
-        @loan = @simulation.build_loan
+    def new
+        @simulation = Simulation.init
         @currencies = SimulationController.currencies
-	end
+    end
 
-	def edit
-	   @simulation = Simulation.find(params[:id])
-	   @loan = @simulation.loan
-       @currencies = SimulationController.currencies
-	end
+    def edit
+        @simulation = Simulation.find(params[:id])
+        if !@simulation.loan.margins.any?
 
-	def create
-		@simulation = Simulation.new(simulation_params)
-		@loan = @simulation.build_loan(loan_params) 
+            @simulation.loan.margins.build
+        end
+        @currencies = SimulationController.currencies
+    end
 
-		@simulation_valid = @simulation.valid?
-		@loan_valid = @loan.valid?
+    def create
+        @simulation = Simulation.build(simulation_params)
+        @simulation_valid = @simulation.valid?
 
-		if !@simulation_valid || !@loan_valid
-			logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
-			logger.debug "loan.errors = #{@loan.errors.full_messages.join("; ")}"
+        if !@simulation_valid 
+            logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
 
-			@currencies = SimulationController.currencies
-			render :action => 'new'
-		else
-			if @simulation.save
-				redirect_to :action => 'list'
-			else
-				@currencies = SimulationController.currencies
-				render :action => 'new'
-			end
-		end
-	end
+            render_new
+        else
+            if @simulation.save
+                redirect_to :action => 'list'
+            else
+                render_new
+            end
+        end
+    end
 
-	def simulation_params
-		params.require(:simulation).permit(:name)
-	end
+    def update
+        @simulation = Simulation.find(params[:id])
+        if !@simulation.loan.margins.any?
+            @simulation.loan.margins.build(simulation_params.require(:loan_attributes).require(:margins_attributes).values)
+        end
+        @simulation_valid = @simulation.valid?
 
-	def loan_params
-		params.require(:loan).permit(:amount, :currency, :period)
-	end
+        if !@simulation_valid 
+            logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
 
-	def update
-	   	@simulation = Simulation.find(params[:id])
-	   	@loan = @simulation.loan
+            render_edit
+        else
+            if @simulation.update_attributes(simulation_params) 
+                redirect_to :action => 'show', :id => @simulation
+            else
+                render_edit
+            end
+        end
+    end
 
-		@simulation_valid = @simulation.valid?
-		@loan_valid = @loan.valid?
+    def delete
+        Simulation.find(params[:id]).destroy
+        redirect_to :action => 'list'
+    end
 
-		if !@simulation_valid || !@loan_valid
-			logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
-			logger.debug "loan.errors = #{@loan.errors.full_messages.join("; ")}"
+    private 
 
-			@currencies = SimulationController.currencies
-			render :action => 'edit'
-		else
-			if @simulation.update_attributes(simulation_params) && @loan.update_attributes(loan_params)
-				redirect_to :action => 'show', :id => @simulation
-			else
-				@currencies = SimulationController.currencies
-				render :action => 'edit'
-			end
-		end
-	end
+    def simulation_params
+        params.require(:simulation).permit(
+            :id,
+            :name, 
+            :loan_attributes => [:id, :amount, :currency, :period,
+                :margins_attributes => [:id, :interest]
+            ]
+        )
+    end
 
+    def render_new
+        @currencies = SimulationController.currencies
+        render :action => 'new'
+    end
 
-	def delete
-		Simulation.find(params[:id]).destroy
-		redirect_to :action => 'list'
-	end
+    def render_edit
+        @currencies = SimulationController.currencies
+        render :action => 'edit'
+    end
+
 
 end

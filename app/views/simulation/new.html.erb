@@ -5,11 +5,8 @@
 <%= render partial: "form", locals: { sim_form: sim_form } %>
 
 <div id="buttons" >
-	<%= submit_tag("Create", :id=>"button", :class=>"btn btn-primary", :name=>"submit") %>
-	<%= link_to 'Cancel', {:action => 'list'}, :class=>"btn btn-secondary" %>
+    <%= submit_tag("Create", :id=>"button", :class=>"btn btn-primary", :name=>"submit") %>
+    <%= link_to 'Cancel', {:action => 'list'}, :class=>"btn btn-secondary" %>
 </div>
 
 <% end -%>
-
-
-

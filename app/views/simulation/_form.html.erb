@@ -1,31 +1,40 @@
 <h4>General</h4>
 
 <%= form_field_for sim_form, :name, {:class=>'form-group', :label=>'Name', :help=>'Not empty. Maximum 256 characters.'} do |_class| %>
-  <%= sim_form.text_field(:name, :class=>"#{_class}") %>
+<%= sim_form.text_field(:name, :class=>"#{_class}") %>
 <% end %> 
 
-<h4>Loan</h4>
+<%= sim_form.fields_for :loan, @simulation.loan do |loan_form|%>
 
-<%= fields_for :loan, @loan do |loan_form|%>
-	<div class="form-group">
-	  <div class="form-row">
+    <h4>Loan</h4>
 
-		<%= form_field_for loan_form, :amount, {:class=>'col', :label=>'Amount', :help=>'Minimum 1 000.00. Maximum 999 999 999.99.'} do |_class| %>
-		  <%= loan_form.text_field(:amount, :class=>"#{_class}") %>
-		<% end %>
+    <div class="form-group">
+        <div class="form-row">
 
-		<%= form_field_for loan_form, :currency, {:class=>'col', :label=>'Currency', :help=>'Select currency.'} do |_class| %>
-		  <%= loan_form.collection_select(:currency, @currencies, :to_s, :to_s, {}, {:class=>"#{_class}"}) %>
-		<% end %> 
+            <%= form_field_for loan_form, :amount, {:class=>'col', :label=>'Amount', :help=>'Minimum 1 000.00. Maximum 999 999 999.99.'} do |_class| %>
+                <%= loan_form.text_field(:amount, :class=>"#{_class}") %>
+            <% end %>
 
-	  </div>
-	</div>
+            <%= form_field_for loan_form, :currency, {:class=>'col', :label=>'Currency', :help=>'Select currency.'} do |_class| %>
+                <%= loan_form.collection_select(:currency, @currencies, :to_s, :to_s, {}, {:class=>"#{_class}"}) %>
+            <% end %> 
 
-	<div class="form-group">
-		<label for = "loan_period">Period (in months)</label>
-		<%= loan_form.number_field(:period, :in=>12...601, :step=>1, :class=>"form-control #{'is-invalid' if loan_form.object.errors[:period].present?}") %>
-		<small id="period_help" class="form-text text-muted">Not empty. Range from 12 to 600.</small>
-		<%= errors_for loan_form, :period %>
-	</div>
+        </div>
+    </div>
+
+    <%= form_field_for loan_form, :period, {:class=>'form-group', :label=>'Period (in months)', :help=>'Not empty. Range from 12 to 600.'} do |_class| %>
+        <%= loan_form.number_field(:period, :class=>"#{_class}") %>
+    <% end %> 
+
+    <h4>Loan Interest Rates</h4>
+
+    <% @simulation.loan.margins.each_with_index do |margin, i| %>
+        <%= loan_form.fields_for :margins, margin, child_index: i do |margin_form| %>
+            <%= form_field_for margin_form, :interest, {:class=>'form-group', :label=>'Margin', :help=>'Minimum 0.00. Maximum 99.999999.'} do |_class| %>
+                <%= margin_form.text_field(:interest, :class=>"#{_class}") %>
+            <% end %> 
+        <% end %>
+    <% end %>
+
 
 <% end %>

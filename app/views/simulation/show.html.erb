@@ -1,45 +1,55 @@
 <h2>Simulation '<%= @simulation.name %>'</h2>
 
 <div class="container">
-	<div class="row">
-		<div class="col-sm ">
-			<h4 class="text-center">General</h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm ">
-			<p class="font-weight-bold text-right">Name:</p>
-		</div>
-		<div class="col-sm">
-			<p><%= @simulation.name %></p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm ">
-			<h4 class="text-center">Loan</h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm ">
-			<p class="font-weight-bold text-right">Amount:</p>
-		</div>
-		<div class="col-sm">
-			<p><%= @simulation.loan.currencyAmount.format %></p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm ">
-			<p class="font-weight-bold text-right">Period:</p>
-		</div>
-		<div class="col-sm">
-			<p><%= @simulation.loan.period %> (months)</p>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-sm ">
+            <h4 class="text-center">General</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm ">
+            <p class="font-weight-bold text-right">Name:</p>
+        </div>
+        <div class="col-sm">
+            <p><%= @simulation.name %></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm ">
+            <h4 class="text-center">Loan</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm ">
+            <p class="font-weight-bold text-right">Amount:</p>
+        </div>
+        <div class="col-sm">
+            <p><%= @simulation.loan.currency_amount.format(symbol: @simulation.loan.currency_amount.currency.iso_code) %></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm ">
+            <p class="font-weight-bold text-right">Period:</p>
+        </div>
+        <div class="col-sm">
+            <p><%= @simulation.loan.period %> [months]</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm ">
+            <p class="font-weight-bold text-right">Margin:</p>
+        </div>
+        <div class="col-sm">
+            <% @simulation.loan.margins.each do |margin| %>
+                <p><%= margin.interest %> %</p>
+            <% end %>
+        </div>
+    </div>
 </div>
 
 
 <div id="buttons">
-	<%= link_to 'Edit', {:action => 'edit', :id => @simulation.id }, :class=>"btn btn-primary" %>
-	<%= link_to 'Delete', {:action => 'delete', :id => @simulation.id }, data: {:confirm => "Are you sure you want to delete this simulation?"}, :class=>"btn btn-secondary" %>
-	<%= link_to 'Cancel', {:action => 'list'}, :class=>"btn btn-secondary" %>
+    <%= link_to 'Edit', {:action => 'edit', :id => @simulation.id }, :class=>"btn btn-primary" %>
+    <%= link_to 'Delete', {:action => 'delete', :id => @simulation.id }, data: {:confirm => "Are you sure you want to delete this simulation?"}, :class=>"btn btn-secondary" %>
+    <%= link_to 'Cancel', {:action => 'list'}, :class=>"btn btn-secondary" %>
 </div>

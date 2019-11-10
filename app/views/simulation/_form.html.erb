@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <%= form_field_for loan_form, :period, {:class=>'form-group', :label=>'Period (in months)', :help=>'Not empty. Range from 12 to 600.'} do |_class| %>
+    <%= form_field_for loan_form, :period, {:class=>'form-group', :label=>'Period (months)', :help=>'Minimum 12. Maximum 600.'} do |_class| %>
         <%= loan_form.number_field(:period, :class=>"#{_class}") %>
     <% end %> 
 
@@ -30,11 +30,16 @@
 
     <% @simulation.loan.margins.each_with_index do |margin, i| %>
         <%= loan_form.fields_for :margins, margin, child_index: i do |margin_form| %>
-            <%= form_field_for margin_form, :interest, {:class=>'form-group', :label=>'Margin', :help=>'Minimum 0.00. Maximum 99.999999.'} do |_class| %>
+            <%= form_field_for margin_form, :interest, {:class=>'form-group', :label=>'Margin (%)', :help=>'Minimum 0.00. Maximum 99.999999.'} do |_class| %>
                 <%= margin_form.text_field(:interest, :class=>"#{_class}") %>
             <% end %> 
         <% end %>
     <% end %>
 
+    <h4>Loan Installment</h4>
+
+    <%= form_field_for loan_form, :installment_type, {:class=>'form-group', :label=>'Installment type', :help=>'Select installment type.'} do |_class| %>
+        <%= loan_form.select :installment_type, enum_options_for_select(Loan, :installment_type) , {}, {:class=>"#{_class}"} %>
+    <% end %> 
 
 <% end %>

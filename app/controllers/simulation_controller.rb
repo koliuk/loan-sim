@@ -1,6 +1,6 @@
 class SimulationController < ApplicationController
 
-    def self.currencies
+    def self.CURRENCIES
         ['PLN']
     end
 
@@ -16,16 +16,15 @@ class SimulationController < ApplicationController
 
     def new
         @simulation = Simulation.init
-        @currencies = SimulationController.currencies
+        @currencies = SimulationController.CURRENCIES
     end
 
     def edit
         @simulation = Simulation.find(params[:id])
         if !@simulation.loan.margins.any?
-
             @simulation.loan.margins.build
         end
-        @currencies = SimulationController.currencies
+        @currencies = SimulationController.CURRENCIES
     end
 
     def create
@@ -76,19 +75,24 @@ class SimulationController < ApplicationController
         params.require(:simulation).permit(
             :id,
             :name, 
-            :loan_attributes => [:id, :amount, :currency, :period,
+            :loan_attributes => [
+                :id, 
+                :amount, 
+                :currency, 
+                :period,
+                :installment_type,
                 :margins_attributes => [:id, :interest]
             ]
         )
     end
 
     def render_new
-        @currencies = SimulationController.currencies
+        @currencies = SimulationController.CURRENCIES
         render :action => 'new'
     end
 
     def render_edit
-        @currencies = SimulationController.currencies
+        @currencies = SimulationController.CURRENCIES
         render :action => 'edit'
     end
 

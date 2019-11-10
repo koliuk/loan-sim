@@ -7,9 +7,7 @@ class Loan < ApplicationRecord
     accepts_nested_attributes_for :margins, reject_if: proc { |attr| attr[:id].blank? }
 
     validates_presence_of :currency_amount
-
     validates_presence_of :currency, message: "Can't be blank"
-
     validates_presence_of :amount, message: "Can't be blank"
     validates :amount, numericality: {message: "Should be a number"}
     validates :amount, numericality: {greater_than_or_equal_to: 1000.00, message: "Should be >= 1000.00"}
@@ -20,6 +18,9 @@ class Loan < ApplicationRecord
     validates :period, numericality: {message: "Should be a number"}
     validates :period, numericality: {greater_than_or_equal_to: 12, message: "Should be >= 12"}
     validates :period, numericality: {less_than_or_equal_to: 600, message: "Should be <= 600"}
+
+	enum installment_type: { equal: 0, decreasing: 1 }
+    validates_presence_of :installment_type, message: "Can't be blank"
     
     def self.init
         loan = self.new

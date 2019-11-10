@@ -32,7 +32,7 @@
             <p class="font-weight-bold text-right">Period:</p>
         </div>
         <div class="col-sm">
-            <p><%= @simulation.loan.period %> [months]</p>
+            <p><%= @simulation.loan.period %> months</p>
         </div>
     </div>
     <div class="row">
@@ -43,6 +43,14 @@
             <% @simulation.loan.margins.each do |margin| %>
                 <p><%= margin.interest %> %</p>
             <% end %>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-sm ">
+            <p class="font-weight-bold text-right">Installment type:</p>
+        </div>
+        <div class="col-sm">
+            <%= enum_l(@simulation.loan, :installment_type) %>
         </div>
     </div>
 </div>

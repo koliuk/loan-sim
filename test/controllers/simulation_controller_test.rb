@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class SimulationControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+    test "should get index" do
+        schedule = SimulationController.prepare_schedule
+        assert true
+    end
 end

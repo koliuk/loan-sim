@@ -1,7 +1,7 @@
 # README
 
 ## Loan Simulation System
-Application is available under link: https://loan-sim.herokuapp.com/
+Application is available at the following link: https://loan-sim.herokuapp.com/
 
 ### Relase notes
 #### 2019-11-10

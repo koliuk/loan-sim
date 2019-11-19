@@ -4,8 +4,17 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+loan01:
+    id: 1
+    simulation_id: 1
+    amount: 100000.00
+    currency: 'PLN'
+    period: 120
+    installment_type: 0
+loan02:
+    id: 2
+    simulation_id: 2
+    amount: 160000.00
+    currency: 'PLN'
+    period: 150
+    installment_type: 1

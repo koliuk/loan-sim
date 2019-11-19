@@ -18,13 +18,15 @@ development:
   username: rails_dev
   password: rails_dev
 
+test:
+  <<: *default
+  host: localhost
+  port: 5432
+  database: loan_sim_test
+  username: rails_test
+  password: rails_test
+
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-#test:
-#  <<: *default
-# database: db/test.sqlite3
 
-#roduction:
-#  <<: *default
-#  database: db/production.sqlite3

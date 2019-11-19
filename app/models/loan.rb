@@ -1,6 +1,7 @@
 require 'money'
 
 class Loan < ApplicationRecord
+
     has_one :simulation
     
     has_many :margins, class_name: "InterestPeriod", dependent: :destroy

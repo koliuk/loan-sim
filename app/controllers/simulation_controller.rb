@@ -1,10 +1,13 @@
 class SimulationController < ApplicationController
 
+    layout 'application'
+
+    # look at https://github.com/RubyMoney/money#deprecation
+    Money.locale_backend = nil
+
     def self.CURRENCIES
         ['PLN']
     end
-
-    layout 'application'
 
     def list
         @simulations = Simulation.all
@@ -95,6 +98,5 @@ class SimulationController < ApplicationController
         @currencies = SimulationController.CURRENCIES
         render :action => 'edit'
     end
-
 
 end

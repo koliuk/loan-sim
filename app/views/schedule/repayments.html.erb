@@ -1,0 +1,49 @@
+<h2>Repayments schedule for: <%= @simulation.name %></h2>
+
+<% if @repayments.blank? %>
+  <h3>There is no schedule for this simulation</h3>
+<% else %>
+<table id = "repayments" class="table"> 
+  <thead class="thead-light">
+    <tr>
+      <th>Number</th>
+      <th>Date</th>
+      <th>Interest</th>
+      <th>Capital</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @repayments.each_with_index do |repayment,idx| %>
+    <tr>
+      <td><%= repayment.number %></td>
+      <td><%= repayment.date.strftime "%F" %></td>
+      <td><%= format_curr_amount(repayment.interest_amount) %></td>
+      <td><%= format_curr_amount(repayment.capital_amount) %></td>
+      <td><%= format_curr_amount(repayment.total_amount) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% end %>
+
+<div class="d-flex">
+    <div class="p-2">
+        <ul class="pagination">
+            <% ScheduleController.PAGE_SIZES.each do |size| %>
+                <li class="page-item <%= "#{'active' if (size == @actual_page_size)}" %>">
+                    <%= link_to size, url_for(items: size, page: params[:page], id: params[:id]), :class=>'page-link' %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+    <div class="ml-auto p-2">
+        <%== pagy_bootstrap_nav(@pagy) %>
+        <%# <%== pagy_items_selector_js(@pagy) %>
+    </div>
+</div>
+
+<div id="buttons">
+    <%= link_to 'Cancel', {:controller => 'simulation', :action => 'show', :id => @simulation.id}, :class=>"btn btn-secondary" %>
+</div>

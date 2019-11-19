@@ -17,7 +17,7 @@
     <tr>
       <td><%= idx+1 %>)</td>
       <td><%= link_to simulation.name, {:action => 'show', :id => simulation.id } %></td>
-      <td><%= simulation.loan.currency_amount.format(symbol: simulation.loan.currency_amount.currency.iso_code) %></td>
+      <td><%= format_curr_amount(simulation.loan.currency_amount) %></td>
       <td>
       	<%= link_to '[Edit]', {:action => 'edit', :id => simulation.id } %>
         <%= link_to '[Delete]', {:action => 'delete', :id => simulation.id }, data: {:confirm => "Are you sure you want to delete this simulation?" } %>  	

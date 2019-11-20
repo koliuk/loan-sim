@@ -8,3 +8,6 @@ Application is available at the following link: https://loan-sim.herokuapp.com/
 * Loan period field
 * Loan margins fields
 * Loan installment type field
+
+#### 2019-11-20
+* Simple loan repayments schedule

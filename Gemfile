@@ -38,6 +38,10 @@ gem 'popper_js'
 # money
 gem 'money'
 
+# pagination
+gem 'pagy', '~> 3.5' 
+gem 'oj'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

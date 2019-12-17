@@ -19,50 +19,47 @@ class SimulationController < ApplicationController
 
     def new
         @simulation = Simulation.init
-        @currencies = SimulationController.CURRENCIES
     end
 
     def edit
         @simulation = Simulation.find(params[:id])
-        if !@simulation.loan.margins.any?
-            @simulation.loan.margins.build
-        end
-        @currencies = SimulationController.CURRENCIES
+        @simulation.prepare
     end
 
     def create
-        @simulation = Simulation.build(simulation_params)
-        @simulation_valid = @simulation.valid?
+        simulation = Simulation.build(simulation_params)
+        simulation_valid = simulation.valid? && simulation.validate
 
-        if !@simulation_valid 
-            logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
-
-            render_new
+        if !simulation_valid
+            logger.debug "simulation.errors = #{simulation.errors.full_messages.join("; ")}"
+            @simulation = simulation
+            render :action => 'new'
         else
-            if @simulation.save
+            if simulation.save
                 redirect_to :action => 'list'
             else
-                render_new
+                @simulation = simulation
+                render :action => 'new'
             end
         end
     end
 
     def update
-        @simulation = Simulation.find(params[:id])
-        if !@simulation.loan.margins.any?
-            @simulation.loan.margins.build(simulation_params.require(:loan_attributes).require(:margins_attributes).values)
-        end
-        @simulation_valid = @simulation.valid?
+        simulation = Simulation.find(params[:id])
+        simulation.update(simulation_params)
 
-        if !@simulation_valid 
-            logger.debug "simulation.errors = #{@simulation.errors.full_messages.join("; ")}"
+        simulation_valid = simulation.valid? && simulation.validate
 
-            render_edit
+        if !simulation_valid
+            logger.debug "simulation.errors = #{simulation.errors.full_messages.join("; ")}"
+            @simulation = simulation
+            render :action => 'edit'
         else
-            if @simulation.update_attributes(simulation_params) 
-                redirect_to :action => 'show', :id => @simulation
+            if simulation.save
+                redirect_to :action => 'show', :id => simulation
             else
-                render_edit
+                @simulation = simulation
+                render :action => 'edit'
             end
         end
     end
@@ -70,6 +67,20 @@ class SimulationController < ApplicationController
     def delete
         Simulation.find(params[:id]).destroy
         redirect_to :action => 'list'
+    end
+
+    def delete_margin
+        if params[:margin_id].present?
+            @interest = InterestPeriod.find(params[:margin_id])
+            logger.debug "Destroy #{params[:margin_id]}"
+            @interest.destroy
+            @deleted = "true"
+        end
+        @margin_id = params[:margin_id]    
+        @margin_idx = params[:margin_idx]  
+        respond_to do |delete_margin|
+            delete_margin.js
+        end
     end
 
     private 
@@ -84,19 +95,15 @@ class SimulationController < ApplicationController
                 :currency, 
                 :period,
                 :installment_type,
-                :margins_attributes => [:id, :interest]
+                :margins_attributes => [
+                    :id,
+                    :interest,
+                    :date_from,
+                    :date_to,
+                    :date_to_present
+                ]
             ]
         )
-    end
-
-    def render_new
-        @currencies = SimulationController.CURRENCIES
-        render :action => 'new'
-    end
-
-    def render_edit
-        @currencies = SimulationController.CURRENCIES
-        render :action => 'edit'
     end
 
 end

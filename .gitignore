@@ -4,3 +4,9 @@ log/
 tmp/
 
 node_modules/
+
+public/packs/
+
+.idea/
+
+/*.iml

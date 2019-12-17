@@ -11,34 +11,142 @@
     <div class="form-group">
         <div class="form-row">
 
-            <%= form_field_for loan_form, :amount, {:class=>'col', :label=>'Amount', :help=>'Minimum 1 000.00. Maximum 999 999 999.99.'} do |_class| %>
+            <%= form_field_for loan_form, :amount, {:class=>'col', :label=>'Amount',
+                    :help=>'Minimum 1 000.00. Maximum 999 999 999.99.'} do |_class| %>
                 <%= loan_form.text_field(:amount, :class=>"#{_class}") %>
             <% end %>
 
-            <%= form_field_for loan_form, :currency, {:class=>'col', :label=>'Currency', :help=>'Select currency.'} do |_class| %>
-                <%= loan_form.collection_select(:currency, @currencies, :to_s, :to_s, {}, {:class=>"#{_class}"}) %>
+            <%= form_field_for loan_form, :currency, {:class=>'col', :label=>'Currency',
+                    :help=>'Select currency.'} do |_class| %>
+                <%= loan_form.collection_select(:currency, SimulationController.CURRENCIES, :to_s, :to_s, {}, {:class=>"#{_class}"}) %>
             <% end %> 
 
         </div>
     </div>
 
-    <%= form_field_for loan_form, :period, {:class=>'form-group', :label=>'Period (months)', :help=>'Minimum 12. Maximum 600.'} do |_class| %>
+    <%= form_field_for loan_form, :period, {:class=>'form-group', :label=>'Period (months)',
+            :help=>'Minimum 12. Maximum 600.'} do |_class| %>
         <%= loan_form.number_field(:period, :class=>"#{_class}") %>
     <% end %> 
 
     <h4>Loan Interest Rates</h4>
 
-    <% @simulation.loan.margins.each_with_index do |margin, i| %>
-        <%= loan_form.fields_for :margins, margin, child_index: i do |margin_form| %>
-            <%= form_field_for margin_form, :interest, {:class=>'form-group', :label=>'Margin (%)', :help=>'Minimum 0.00. Maximum 99.999999.'} do |_class| %>
-                <%= margin_form.text_field(:interest, :class=>"#{_class}") %>
-            <% end %> 
+    <h5>Margin</h5>
+
+    <% i = 0 %>
+    <div id="margins-block">
+        <% Loan.sort_margins(@simulation.loan.margins).each_with_index do |margin, idx| %>
+            <%= render partial: 'margin_fields', locals: { loan_form: loan_form, margin: margin, idx: idx} %>
+            <% i = idx %>
         <% end %>
-    <% end %>
+    </div>
+
+    <div class="form-group">
+        <%= link_to_add_association 'Add margin', loan_form, :margins, 
+            {
+                render_options: {locals: { loan_form: loan_form, margin: InterestPeriod.new, idx: i}},
+                id: 'add-margin-link',
+                class: 'font-weight-bold add-margin-link-cl',
+                current_idx: "#{i}" 
+            }
+        %>
+    </div>
+
+    <script type="text/javascript">
+
+        var datepicker_config = {
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            todayBtn: 'linked',
+            autoclose: 'true'
+        };
+
+        window.disableDateToPicker = function(checked, selector) {
+            // console.log('[disableDateToPicker] selector='+selector+', checked='+checked);
+            $(selector).prop('disabled', !checked);
+            if(!checked) {
+                $(selector).val(''); 
+            }
+        }
+
+        window.disableDeleteMarginLink = function() {
+            // console.log('[disableDeleteMarginLink]');
+            var margin_rows_count = $(".margin_row").length;
+            console.log('[disableDeleteMarginLink]margin_rows_count='+margin_rows_count);
+            if (margin_rows_count > 1) {
+                $(".delete-margin-link").removeClass("disabled");
+            }
+            else {
+                $(".delete-margin-link").addClass("disabled");
+            }
+        }
+
+        window.deleteMarginRow = function(idx) {
+            // console.log('[deleteMarginRow]idx='+idx);
+            var margin_rows_count = $(".margin_row").length;
+            if (margin_rows_count > 1) {
+                $("#margin_row" + idx).fadeOut(300, function() { 
+                    $(this).remove();
+                    $('#simulation_loan_attributes_margins_attributes' + idx + 'id').remove();
+                    window.disableDeleteMarginLink();
+                });
+            } 
+            else {
+                alert("Can not delete this margin. There must be at least one margin.");
+            }
+        }
+
+        $(document).on('click', '.date-to-present', function() {
+            var selector = "[selector='date_to_picker" + $(this).attr("idx") + "']";
+            window.disableDateToPicker($(this).is(':checked'), selector);
+        }); 
+
+        $('#add-margin-link').on('click', function() {
+            var current_idx = $("#add-margin-link").attr("current_idx");
+            var new_idx = (parseInt(current_idx) + 1).toString();
+
+            var html = $("#add-margin-link").attr("data-association-insertion-template");
+            html = html.replace(/_[0-9]+_/g, "_" + new_idx + "_");
+            html = html.replace(/\[[0-9]+\]/g, "[" + new_idx + "]");
+            
+            $("#margins-block").append(html);
+
+            $("#add-margin-link").attr("current_idx", new_idx);
+
+            var date_from_selector = "[selector='date_from_picker_" + new_idx + "_']";
+            var date_to_selector = "[selector='date_to_picker_" + new_idx + "_']";
+
+            $(date_from_selector).datepicker(datepicker_config);
+            $(date_to_selector).datepicker(datepicker_config);
+
+            $(date_from_selector).datepicker("update", new Date());
+            window.disableDateToPicker(false, date_to_selector);
+
+            window.disableDeleteMarginLink();
+        });
+
+
+        $(document).ready(function() {
+
+            $("#add-margin-link").attr("href", "javascript:void(0)");
+  
+            $(".date-from-picker").datepicker(datepicker_config);
+            $(".date-to-picker").datepicker(datepicker_config);
+
+            $('.date-to-present').each(function() {
+                var selector = "[selector='date_to_picker" + $(this).attr("idx") + "']";
+                disableDateToPicker($(this).is(':checked'), selector);
+            });
+
+            window.disableDeleteMarginLink();
+        });
+
+    </script>
 
     <h4>Loan Installment</h4>
 
-    <%= form_field_for loan_form, :installment_type, {:class=>'form-group', :label=>'Installment type', :help=>'Select installment type.'} do |_class| %>
+    <%= form_field_for loan_form, :installment_type, {:class=>'form-group', :label=>'Installment type',
+            :help=>'Select installment type.'} do |_class| %>
         <%= loan_form.select :installment_type, enum_options_for_select(Loan, :installment_type) , {}, {:class=>"#{_class}"} %>
     <% end %> 
 

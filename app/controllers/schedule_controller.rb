@@ -26,7 +26,7 @@ class ScheduleController < ApplicationController
         repayments = Array.new
         for i in 1..loan.period
             repayments << prepare_schedule_repayment(i, loan)
-            # logger.debug "#{repayments[i-1].to_str}"
+            # logger.debug "#{repayments[i-1].to_s}"
         end
         repayments
     end
@@ -35,7 +35,7 @@ class ScheduleController < ApplicationController
         repayment = ScheduleRepayment.new
         repayment.number = number
         repayment.date = Date.current >> (number - 1)
-
+        # TODO: use BigDecimal
         if loan.installment_type == "equal"
             amount = ExcelPmtHelper.pmt(loan.margins[0].interest/1200, loan.period, (-1) * loan.amount)
             repayment.total_amount = Money.from_amount(amount, loan.currency)

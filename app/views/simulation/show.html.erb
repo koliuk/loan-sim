@@ -2,12 +2,12 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <h4 class="text-center">General</h4>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <p class="font-weight-bold text-right">Name:</p>
         </div>
         <div class="col-sm">
@@ -15,12 +15,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <h4 class="text-center">Loan</h4>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <p class="font-weight-bold text-right">Amount:</p>
         </div>
         <div class="col-sm">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <p class="font-weight-bold text-right">Period:</p>
         </div>
         <div class="col-sm">
@@ -36,17 +36,26 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <p class="font-weight-bold text-right">Margin:</p>
         </div>
         <div class="col-sm">
-            <% @simulation.loan.margins.each do |margin| %>
-                <p><%= margin.interest %> %</p>
-            <% end %>
+            <table class="table-borderless">
+                <tbody>
+                    <% Loan.sort_margins(@simulation.loan.margins).each do |margin| %>
+                        <tr>
+                            <td><p class="pr-2"><%= margin.interest %> %</p></td>
+                            <td>
+                                <p>| <%= margin.date_from %> - <%= margin.date_to.nil? ? "indefinitely" : margin.date_to %></p>
+                            </td>
+                        </tr>
+                    <% end %>
+                <tbody>
+            </table>
         </div>
     </div>
         <div class="row">
-        <div class="col-sm ">
+        <div class="col-sm">
             <p class="font-weight-bold text-right">Installment type:</p>
         </div>
         <div class="col-sm">

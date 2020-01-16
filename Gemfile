@@ -30,8 +30,10 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 # bootstrap
 gem 'bootstrap', '~> 4.3.1'
+
 # jquery
 gem 'jquery-rails'
+
 # popper
 gem 'popper_js' 
 
@@ -41,6 +43,12 @@ gem 'money'
 # pagination
 gem 'pagy', '~> 3.5' 
 gem 'oj'
+
+# datepicker
+gem 'bootstrap-datepicker-rails'
+
+# cocoon
+gem 'cocoon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -1,0 +1,47 @@
+<%= loan_form.fields_for :margins, margin do |margin_form| %>
+
+<%= tag.div class: "form-row margin_row", id: "margin_row_#{idx}_" do %>
+
+    <%= form_field_for margin_form, :interest, {:class=>'form-group col', :label=>'Rate (%)',
+            :help=>'Minimum 0. Maximum 99.999999.'} do |_class| %>
+        <%= margin_form.text_field(:interest, :class=>"#{_class}") %>
+    <% end %> 
+
+    <%= form_field_for margin_form, :date_from, {:class=>'form-group col', :label=>'Date from',
+            :help=>'Format: yyyy-mm-dd.'} do |_class| %>
+         <%= margin_form.text_field :date_from, data: {provide: 'datepicker'}, :selector=>"date_from_picker_#{idx}_",
+            :class=>"form-control date-from-picker #{_class}" %>
+    <% end %>
+
+    <%= tag.div class: "form-group col" do %>
+
+        <div class="custom-control custom-checkbox custom-control-inline mb-2">
+            <%= margin_form.check_box(:date_to_present, {:class=>"custom-control-input date-to-present", :idx=>"_#{idx}_"}) %>
+            <%= margin_form.label(:date_to_present, 'Date to', :class=> 'custom-control-label') %>
+        </div>
+
+        <%= margin_form.text_field :date_to, data: {provide: 'datepicker'}, :selector=>"date_to_picker_#{idx}_",
+            :class=>"form-control date-to-picker form-control #{'is-invalid' if margin_form.object.errors[:date_to].present?}" %>
+
+        <%= help_for(:date_to, 'Format: yyyy-mm-dd.') %>
+
+        <%= errors_for(margin_form, :date_to) %>
+
+    <% end %>
+
+    <%= tag.div class: "my-auto #{margin_form.object.errors.empty? ? 'pb-4' : 'pb-5'}" do %>
+        <%= link_to '[Delete]', {
+            :action => 'delete_margin',
+            :margin_id => (margin.present? ? margin.id : nil),
+            :margin_idx => "_#{idx}_",
+            :remote => true },
+            :id => "delete-margin-link_#{idx}_",
+            :idx => "_#{idx}_",
+            :margin_id => "#{margin.present? ? margin.id : ""}",
+            :class => 'btn-link font-weight-bold delete-margin-link',
+            :data => { :confirm => "Are you sure you want to delete this margin?" } %>
+    <% end %>
+
+<% end %>
+
+<% end %>

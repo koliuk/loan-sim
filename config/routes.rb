@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 	get 'simulation/edit'
 	patch 'simulation/update'
 	get 'simulation/delete'
+    get 'simulation/delete_margin'
 
     get 'schedule/repayments'
 
